@@ -22,8 +22,9 @@ wss.on('connection', (ws) => {
     ws.on('message', (messageAsString) => {
         const message = JSON.parse(messageAsString);
         const outbound = JSON.stringify(message);
+        const metadata = clients.get(ws);
 
-        [...clients.keys()].forEach((client) => {
+        [...clients.keys()].filter((key) => clients.get(key).id !== metadata.id).forEach((client) => {
             client.send(outbound);
         });
     });
